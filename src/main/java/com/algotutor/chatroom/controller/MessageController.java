@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ import com.algotutor.chatroom.payload.MessageRequest;
 import com.algotutor.chatroom.repo.RoomRepository;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:5173")
 public class MessageController {
 
 	@Autowired
@@ -26,8 +27,9 @@ public class MessageController {
 	@MessageMapping("/sendMessage/{roomId}")
 	@SendTo("/topic/room/{roomId}")
 	public Message sendMessage(
-			@RequestBody MessageRequest messageRequest,
-			@DestinationVariable String roomId)
+			
+			@DestinationVariable("roomId") String roomId,
+			@Payload MessageRequest messageRequest)
 	{
 		Room room = roomRepo.findByRoomId(messageRequest.getRoomId());
 		

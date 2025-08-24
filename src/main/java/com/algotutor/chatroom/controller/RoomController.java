@@ -19,7 +19,7 @@ import com.algotutor.chatroom.services.RoomService;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:5173")
 public class RoomController {
 
 	public final RoomService roomService;
@@ -32,6 +32,8 @@ public class RoomController {
 	@PostMapping
 	public ResponseEntity<?> createRoom(@RequestBody String roomId)
 	{
+	    roomId = roomId.replace("\"", "");
+
 		if(roomService.findByRoomId(roomId) != null)
 		{
 			return ResponseEntity.badRequest().body("Room already exists");
@@ -45,6 +47,8 @@ public class RoomController {
 	@GetMapping("/{roomId}")
 	public ResponseEntity<?> joinRoom(@PathVariable(name = "roomId") String roomId)
 	{
+		roomId = roomId.replace("\"", "");
+		
 		Room room = roomService.findByRoomId(roomId);
 		if(room == null)
 		{
